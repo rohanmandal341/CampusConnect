@@ -8,6 +8,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -41,6 +42,13 @@ public class GlobalExceptionHandler {
     public ResponseEntity<?> handleGenericException(Exception ex){
         Map<String, String> errors = new HashMap<>();
         errors.put("error", ex.getMessage());
+        return new ResponseEntity<>(errors,HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    @ExceptionHandler(IOException.class)
+    public ResponseEntity<?> handleIO(IOException ex){
+        Map<String,String> errors = new HashMap<>();
+        errors.put("Error","I/O error : "+ ex.getMessage());
         return new ResponseEntity<>(errors,HttpStatus.INTERNAL_SERVER_ERROR);
     }
 

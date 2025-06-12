@@ -23,6 +23,7 @@ import org.springframework.stereotype.Service;
 public class StudentServiceImpl implements StudentService{
 
     private final StudentRepository studentRepository;
+    private final EmailService emailService;
 
     private StudentResponseDto toResponseDTO(Student student){
         StudentResponseDto dto =  new StudentResponseDto();
@@ -47,6 +48,11 @@ public class StudentServiceImpl implements StudentService{
                 .build();
         Student saved = studentRepository.save(student);
         log.info("successfully saved into DB : {}",student);
+
+        String subject = "Welcome to CampusConnect!";
+        String body = "Hi " + saved.getName() + ",\n\nYour registration is successful.\n\nRegards!\nCampus-connect.";
+
+        emailService.sendEmail(saved.getEmail(),subject,body);
         return toResponseDTO(saved);
     }
 
