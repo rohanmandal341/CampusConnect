@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 public class FacultyServiceImpl implements FacultyService {
 
     private final FacultyRepository facultyRepository;
+    private final EmailService emailService;
 
     private FacultyResponseDTO convert(Faculty faculty){
         FacultyResponseDTO dto = new FacultyResponseDTO();
@@ -37,6 +38,10 @@ public class FacultyServiceImpl implements FacultyService {
                 .address(dto.getAddress())
                 .build();
         Faculty saved = facultyRepository.save(faculty);
+
+        String subject = "Welcome to CampusConnect!";
+        String body = "Hi " + saved.getName() + ",\n\nYour registration is successful.\n\nRegards!\nCampus-connect.";
+        emailService.sendEmail(saved.getEmail(), subject, body);
         return convert(saved);
     }
 
